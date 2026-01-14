@@ -3,6 +3,15 @@ name = "file-organizer"
 version = "0.1.0"
 edition = "2024"
 
+authors = ["Wizdan M. G. S. <wizdanshodri@protonmail.com>"]
+description = "A simple CLI tool to organize files by extension or date"
+license = "MIT"
+repository = "https://github.com/wizdanmgs/file-organizer"
+homepage = "https://github.com/wizdanmgs/file-organizer"
+readme = "README.md"
+keywords = ["cli", "organizer"]
+categories = ["command-line-utilities"]
+
 [dependencies]
 chrono = "0.4.42"
 clap = { version = "4.5.54", features = ["derive"] }
@@ -13,3 +22,7 @@ thiserror = "2.0.17"
 [dev-dependencies]
 tempfile = "3.24.0"
 assert_cmd = "2.1.2"
+
+[[bin]]
+name = "forg"
+path = "src/main.rs"
