@@ -5,14 +5,11 @@ pub enum OrganizerError {
     #[error("IO error: {0}")]
     Io(#[from] std::io::Error),
 
-    #[error("Time error: {0}")]
-    Time(#[from] chrono::ParseError),
+    #[error("Serialization error: {0}")]
+    Serde(#[from] serde_json::Error),
 
-    #[error("Invalid arguments")]
-    InvalidArgs,
-
-    #[error("Unknown organize mode: {0}")]
-    UnknownMode(String),
+    #[error("Invalid command usage")]
+    InvalidUsage,
 }
 
 pub type Result<T> = std::result::Result<T, OrganizerError>;

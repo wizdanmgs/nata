@@ -1,20 +1,27 @@
-use crate::error::{OrganizerError, Result};
+use clap::{Parser, ValueEnum};
 use std::path::PathBuf;
 
-pub struct CliArgs {
+#[derive(Parser, Debug)]
+#[command(name = "organize")]
+#[command(about = "Organize files by extension or date")]
+pub struct Cli {
     pub path: PathBuf,
-    pub mode: String,
+
+    #[arg(long, value_enum)]
+    pub by: Option<Mode>,
+
+    #[arg(long)]
+    pub dry_run: bool,
+
+    #[arg(long)]
+    pub recursive: bool,
+
+    #[arg(long)]
+    pub undo: bool,
 }
 
-pub fn parse() -> Result<CliArgs> {
-    let args: Vec<String> = std::env::args().collect();
-
-    if args.len() != 4 || args[2] != "--by" {
-        return Err(OrganizerError::InvalidArgs);
-    }
-
-    Ok(CliArgs {
-        path: PathBuf::from(&args[1]),
-        mode: args[3].clone(),
-    })
+#[derive(ValueEnum, Clone, Debug)]
+pub enum Mode {
+    Extension,
+    Date,
 }

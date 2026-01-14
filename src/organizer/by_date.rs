@@ -1,13 +1,18 @@
 use crate::error::Result;
 use crate::fs_utils::list_files;
+use crate::organizer::move_file::move_file;
+use crate::undo::MoveRecord;
 use chrono::{DateTime, Local};
 use std::fs;
 use std::path::Path;
 
-pub fn organize(dir: &Path) -> Result<()> {
-    let files = list_files(dir)?;
-
-    for file in files {
+pub fn organize(
+    dir: &Path,
+    recursive: bool,
+    dry_run: bool,
+    log: &mut Vec<MoveRecord>,
+) -> Result<()> {
+    for file in list_files(dir, recursive)? {
         let metadata = fs::metadata(&file)?;
         let modified = metadata.modified()?;
 
@@ -18,7 +23,7 @@ pub fn organize(dir: &Path) -> Result<()> {
         fs::create_dir_all(&target_dir)?;
 
         let target_path = target_dir.join(file.file_name().unwrap());
-        fs::rename(file, target_path)?;
+        move_file(file, target_path, dry_run, log)?;
     }
 
     Ok(())
