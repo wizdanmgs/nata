@@ -1,16 +1,11 @@
 use crate::error::Result;
 use crate::fs_utils::list_files;
+use crate::organizer::ensure_dir::ensure_dir;
 use crate::organizer::move_file::move_file;
-use crate::undo::MoveRecord;
-use std::fs;
+use crate::undo::UndoLog;
 use std::path::Path;
 
-pub fn organize(
-    dir: &Path,
-    recursive: bool,
-    dry_run: bool,
-    log: &mut Vec<MoveRecord>,
-) -> Result<()> {
+pub fn organize(dir: &Path, recursive: bool, dry_run: bool, log: &mut UndoLog) -> Result<()> {
     for file in list_files(dir, recursive)? {
         let ext = file
             .extension()
@@ -18,10 +13,10 @@ pub fn organize(
             .unwrap_or("unknown");
 
         let target_dir = dir.join(ext);
-        fs::create_dir_all(&target_dir)?;
+        ensure_dir(&target_dir, dry_run, &mut log.created_dirs)?;
 
         let target_path = target_dir.join(file.file_name().unwrap());
-        move_file(file, target_path, dry_run, log)?;
+        move_file(file, target_path, dry_run, &mut log.moves)?;
     }
 
     Ok(())
@@ -36,7 +31,10 @@ mod tests {
     #[test]
     fn organizes_files_by_extension() {
         let dir = tempdir().unwrap();
-        let mut log = Vec::<MoveRecord>::new();
+        let mut log = UndoLog {
+            moves: Vec::new(),
+            created_dirs: Vec::new(),
+        };
         File::create(dir.path().join("a.txt")).unwrap();
         File::create(dir.path().join("b.jpg")).unwrap();
 

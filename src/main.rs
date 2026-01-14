@@ -6,11 +6,14 @@ mod undo;
 
 use clap::Parser;
 use error::{OrganizerError, Result};
-use undo::MoveRecord;
+use undo::UndoLog;
 
 fn main() -> Result<()> {
     let cli = cli::Cli::parse();
-    let mut log = Vec::<MoveRecord>::new();
+    let mut log = UndoLog {
+        moves: Vec::new(),
+        created_dirs: Vec::new(),
+    };
 
     if cli.undo {
         organizer::undo::undo(&cli.path)?;

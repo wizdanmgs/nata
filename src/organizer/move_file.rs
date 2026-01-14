@@ -11,6 +11,7 @@ pub fn move_file(
 ) -> Result<()> {
     if dry_run {
         println!("[dry-run] {:?} -> {:?}", from, to);
+        return Ok(());
     } else {
         fs::create_dir_all(to.parent().unwrap())?;
         fs::rename(&from, &to)?;

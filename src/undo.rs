@@ -5,19 +5,25 @@ use std::path::{Path, PathBuf};
 
 const LOG_FILE: &str = ".organize-log.json";
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct MoveRecord {
     pub from: PathBuf,
     pub to: PathBuf,
 }
 
-pub fn save_log(base: &Path, records: &[MoveRecord]) -> Result<()> {
+#[derive(Serialize, Deserialize, Debug)]
+pub struct UndoLog {
+    pub moves: Vec<MoveRecord>,
+    pub created_dirs: Vec<PathBuf>,
+}
+
+pub fn save_log(base: &Path, log: &UndoLog) -> Result<()> {
     let path = base.join(LOG_FILE);
-    fs::write(path, serde_json::to_string_pretty(records)?)?;
+    fs::write(path, serde_json::to_string_pretty(log)?)?;
     Ok(())
 }
 
-pub fn load_log(base: &Path) -> Result<Vec<MoveRecord>> {
+pub fn load_log(base: &Path) -> Result<UndoLog> {
     let path = base.join(LOG_FILE);
     let data = fs::read_to_string(path)?;
     Ok(serde_json::from_str(&data)?)
