@@ -8,11 +8,10 @@ use std::path::PathBuf;
     about = "Organize files by extension or date",
     after_help = r#"
 EXAMPLES:
-  organize ~/Downloads --by extension
-  organize ~/Downloads --by date --recursive
-  organize ~/Downloads --by extension --dry-run
-  organize ~/Downloads --by date --recursive --dry-run
-  organize ~/Downloads --undo
+  nata ~/Downloads --by extension
+  nata ~/Downloads --by date --recursive
+  nata ~/Downloads --by date --recursive --dry-run
+  nata ~/Downloads --undo
 
 TIPS:
   • Always try --dry-run first to preview changes
