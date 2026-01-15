@@ -1,13 +1,13 @@
 [package]
-name = "file-organizer"
+name = "nata"
 version = "0.1.0"
 edition = "2024"
 
 authors = ["Wizdan M. G. S. <wizdanshodri@protonmail.com>"]
 description = "A simple CLI tool to organize files by extension or date"
 license = "MIT"
-repository = "https://github.com/wizdanmgs/file-organizer"
-homepage = "https://github.com/wizdanmgs/file-organizer"
+repository = "https://github.com/wizdanmgs/nata"
+homepage = "https://github.com/wizdanmgs/nata"
 readme = "README.md"
 keywords = ["cli", "organizer"]
 categories = ["command-line-utilities"]
@@ -24,5 +24,5 @@ tempfile = "3.24.0"
 assert_cmd = "2.1.2"
 
 [[bin]]
-name = "forg"
+name = "nata"
 path = "src/main.rs"
