@@ -7,9 +7,6 @@ pub enum OrganizerError {
 
     #[error("Serialization error: {0}")]
     Serde(#[from] serde_json::Error),
-
-    #[error("Invalid command usage")]
-    InvalidUsage,
 }
 
 pub type Result<T> = std::result::Result<T, OrganizerError>;

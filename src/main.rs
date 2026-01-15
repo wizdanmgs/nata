@@ -5,7 +5,7 @@ mod organizer;
 mod undo;
 
 use clap::Parser;
-use error::{OrganizerError, Result};
+use error::Result;
 use undo::UndoLog;
 
 fn main() -> Result<()> {
@@ -20,7 +20,20 @@ fn main() -> Result<()> {
         return Ok(());
     }
 
-    let mode = cli.by.ok_or(OrganizerError::InvalidUsage)?;
+    let mode = match cli.by {
+        Some(m) => m,
+        None => {
+            eprintln!();
+            eprintln!("ERROR: Missing required option --by");
+            eprintln!();
+            eprintln!("Hint:");
+            eprintln!("  organize <path> --by <extension|date>");
+            eprintln!("  organize <path> --by extension --dry-run");
+            eprintln!("  organize <path> --undo");
+            eprintln!();
+            std::process::exit(2);
+        }
+    };
 
     match mode {
         cli::Mode::Extension => {
@@ -33,6 +46,10 @@ fn main() -> Result<()> {
 
     if !cli.dry_run {
         undo::save_log(&cli.path, &log)?;
+    } else {
+        println!();
+        println!("Dry-run complete.");
+        println!("Run again without --dry-run to apply these changes.");
     }
 
     Ok(())
